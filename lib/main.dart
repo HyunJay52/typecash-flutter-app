@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:typecash_flutter_app/screens/ad/ad_page.dart';
+import 'package:typecash_flutter_app/screens/home/typecash_home_page.dart';
+import 'package:typecash_flutter_app/screens/splash_page.dart';
+import 'package:typecash_flutter_app/screens/user/join_user_page.dart';
+import 'package:typecash_flutter_app/screens/user/login_page.dart';
+import 'package:typecash_flutter_app/screens/user/password_reset_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TypeCash',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -29,8 +35,23 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // fontFamily: 
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      supportedLocales: const [
+        Locale('ko', 'KR'), // Korean
+        Locale('en', 'US'), // English
+      ],
+      home: LoginPage(),// const MyHomePage(title: 'Login Page'),
+      // initialRoute: LoginPage.routeName,
+      routes: {
+        // todo : create route helper
+        SplashPage.routeName: (context) => SplashPage(),
+        LoginPage.routeName: (context) => const LoginPage(),
+        TypecashHomePage.routeName: (context) => const TypecashHomePage(),  
+        PasswordResetPage.routeName: (context) => const PasswordResetPage(),
+        JoinUserPage.routeName: (context) => const JoinUserPage(),
+        AdPage.routeName: (context) => const AdPage(),
+      }
     );
   }
 }
@@ -109,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            LoginPage(),
           ],
         ),
       ),

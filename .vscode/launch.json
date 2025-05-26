@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "typecash local",
+            "request": "launch",
+            "type": "dart",
+            "program": "main.dart",
+            "args": ["--flavor", "local"]
+        }
+    ]
+}
