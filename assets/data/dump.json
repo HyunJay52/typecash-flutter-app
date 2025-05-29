@@ -1,0 +1,102 @@
+[
+    {
+        "id": "a123",
+        "used": false,
+        "content": "포기하지 않는 자에게 기회는 온다"
+    },
+    {
+        "id": "b456",
+        "used": true,
+        "content": "성공은 준비된 자의 것이다"
+    },
+    {
+        "id": "c789",
+        "used": false,
+        "content": "작은 노력도 큰 변화를 만든다"
+    },
+    {
+        "id": "d012",
+        "used": true,
+        "content": "오늘의 선택이 내일을 만든다"
+    },
+    {
+        "id": "e345",
+        "used": false,
+        "content": "실패는 성공의 디딤돌이다"
+    },
+    {
+        "id": "f678",
+        "used": true,
+        "content": "행동이 꿈을 현실로 만든다"
+    },
+    {
+        "id": "g901",
+        "used": false,
+        "content": "기회는 준비된 자에게 온다"
+    },
+    {
+        "id": "h234",
+        "used": true,
+        "content": "노력은 배신하지 않는다"
+    },
+    {
+        "id": "i567",
+        "used": false,
+        "content": "시간은 금이다"
+    },
+    {
+        "id": "j890",
+        "used": true,
+        "content": "도전은 성장의 시작이다"
+    },
+    {
+        "id": "k123",
+        "used": false,
+        "content": "배움은 끝이 없다"
+    },
+    {
+        "id": "l456",
+        "used": true,
+        "content": "긍정은 성공의 열쇠다"
+    },
+    {
+        "id": "m789",
+        "used": false,
+        "content": "작은 변화가 큰 결과를 만든다"
+    },
+    {
+        "id": "n012",
+        "used": true,
+        "content": "오늘을 소중히 여겨라"
+    },
+    {
+        "id": "o345",
+        "used": false,
+        "content": "미래는 현재의 행동에 달렸다"
+    },
+    {
+        "id": "p678",
+        "used": true,
+        "content": "성공은 끈기의 결과다"
+    },
+    {
+        "id": "q901",
+        "used": false,
+        "content": "목표는 꿈을 현실로 만든다"
+    },
+    {
+        "id": "r234",
+        "used": true,
+        "content": "도전은 나를 강하게 한다"
+    },
+    {
+        "id": "s567",
+        "used": false,
+        "content": "노력은 성공의 시작이다"
+    },
+    {
+        "id": "t890",
+        "used": true,
+        "content": "성장은 멈추지 않는다"
+    }
+]
