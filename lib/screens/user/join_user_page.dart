@@ -10,15 +10,59 @@ class JoinUserPage extends StatefulWidget {
 }
 
 class _JoinUserPageState extends State<JoinUserPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+
+  String? _emailError;
+  String? _passwordError;
+  String? _confirmPasswordError;
+
+  String? email;
+  String? password;
+  String? _confirmPassword;
+  bool _agreeToTerms = false;
+  bool _agreeToPrivacy = false;
+
+  @override
+  void dispose() {
+    _passwordController.dispose(); 
+    super.dispose();
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return '이메일을 입력해주세요';
+    }
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    if (!emailRegex.hasMatch(value)) {
+      return '유효한 이메일 주소를 입력해주세요';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 입력해주세요';
+    }
+    final passwordRegex = RegExp(r'^(?=.*[0-9])(?=.*[@!*_-]).{8,}$');
+    if (!passwordRegex.hasMatch(value)) {
+      return '숫자 1개, 특수문자(@, !, *, -, _) 1개 이상 포함된 8자 이상이어야 합니다';
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 재입력해주세요';
+    }
+    if (value != _passwordController.text) {
+      return '비밀번호가 일치하지 않습니다';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    String? _email;
-    String? _password;
-    String? _confirmPassword;
-    bool _agreeToTerms = false;
-    bool _agreeToPrivacy = false;
-
     return Scaffold(
       appBar: AppBar(title: const Text('회원가입')),
       body: Padding(
@@ -36,99 +80,117 @@ class _JoinUserPageState extends State<JoinUserPage> {
             child: ListView(
               children: [
                 TextFormField(
-                  decoration: const InputDecoration(labelText: '이메일'),
+                  decoration: InputDecoration(labelText: '이메일', errorText: _emailError, 
+                  ),
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '이메일을 입력해주세요';
-                    }
-                    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                    if (!emailRegex.hasMatch(value)) {
-                      return '유효하지 않은 이메일 주소입니다, 다시 입력해주세요';
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      _emailError = validateEmail(value);
+                      email = value;
+                    });
                   },
-                  onSaved: (value) => _email = value,
+                  validator: validateEmail,
+                  onSaved: (value) => email = value,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: '비밀번호'),
+                  controller: _passwordController,
+                  decoration: InputDecoration(labelText: '비밀번호', errorText: _passwordError,
+                  hintText: '숫자 1개, 특수문자(@, !, *, -, _) 1개 이상 포함된 8자 이상이어야 합니다.',
+                  hintStyle: const TextStyle(
+                      fontSize: 12, // 원하는 크기로 조절
+                      color: Colors.grey, // 원하는 색상 지정
+                    ),
+                  ),
                   obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '비밀번호를 입력해주세요';
-                    }
-                    if (value.length < 8 ||
-                        !RegExp(r'[A-Za-z]').hasMatch(value) ||
-                        !RegExp(r'[0-9]').hasMatch(value)) {
-                      return '8글자 이상 영문과 숫자를 포함해야 합니다';
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      _passwordError = validatePassword(value);
+                      password = value;
+
+                      if (_confirmPassword != null &&
+                          _confirmPassword!.isNotEmpty) {
+                        _confirmPasswordError = validateConfirmPassword(
+                          _confirmPassword,
+                        );
+                      }
+                    });
                   },
-                  onSaved: (value) => _password = value,
+                  validator: validatePassword,
+                  onSaved: (value) => password = value,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: '비밀번호 재입력'),
+                  decoration: InputDecoration(labelText: '비밀번호 재입력', errorText: _confirmPasswordError, 
+                  ),
                   obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
-                    }
-                    if (value != _password) {
-                      return '비밀번호가 일치하지 않습니다';
-                    }
-                    return null;
+                  onChanged: (value) {
+                    setState(() {
+                      _confirmPasswordError = validateConfirmPassword(value);
+                      _confirmPassword = value;
+                    });
                   },
+                  validator: validateConfirmPassword,
                   onSaved: (value) => _confirmPassword = value,
                 ),
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    const Text('이용약관에 동의합니다.'),
-                    TextButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder:
-                              (context) => const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'Terms and conditions content goes here.',
-                                ),
-                              ),
-                        );
-                      },
-                      child: const Text('내용보기'),
-                    ),
+                  Checkbox(
+                    value: _agreeToTerms,
+                    onChanged: (value) {
+                    setState(() {
+                      _agreeToTerms = value ?? false;
+                    });
+                    },
+                  ),
+                  const Text('이용약관에 동의합니다.'),
+                  TextButton(
+                    onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SingleChildScrollView(
+                        child: const Text(
+                        '이용약관 내용이 여기에 표시됩니다. '
+                        '이용약관의 내용이 길 경우 스크롤하여 확인할 수 있습니다.',
+                        ),
+                      ),
+                      ),
+                    );
+                    },
+                    child: const Text('내용보기'),
+                  ),
                   ],
                 ),
                 Row(
                   children: [
-                    Checkbox(
-                      value: _agreeToTerms,
-                      onChanged: (value) {
-                        setState(() {
-                          _agreeToTerms = value ?? false;
-                        });
-                      },
-                    ),
-                    const Text('개인정보 수집에 동의'),
-                    TextButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder:
-                              (context) => const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'Privacy policy content goes here.',
-                                ),
-                              ),
-                        );
-                      },
-                      child: const Text('내용보기'),
-                    ),
+                  Checkbox(
+                    value: _agreeToPrivacy,
+                    onChanged: (value) {
+                    setState(() {
+                      _agreeToPrivacy = value ?? false;
+                    });
+                    },
+                  ),
+                  const Text('개인정보 수집에 동의'),
+                  TextButton(
+                    onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SingleChildScrollView(
+                        child: const Text(
+                        '개인정보 수집 및 이용 동의 내용이 여기에 표시됩니다.',
+                        ),
+                      ),
+                      ),
+                    );
+                    },
+                    child: const Text('내용보기'),
+                  ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -144,7 +206,7 @@ class _JoinUserPageState extends State<JoinUserPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'Please agree to the terms and privacy policy',
+                              '이용약관과 개인정보 수집에 동의해주세요',
                             ),
                           ),
                         );
@@ -156,9 +218,8 @@ class _JoinUserPageState extends State<JoinUserPage> {
               ],
             ),
           ),
-        )
-        
-              ),
+        )  
+      ),
     );
   }
 }

@@ -38,8 +38,14 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     });
   }
 
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    return emailRegex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('비밀번호 재설정'),
@@ -47,25 +53,34 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: isPasswordReset
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                verticalDirection: VerticalDirection.down,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    '비밀번호가 성공적으로 재설정되었습니다! 🎉',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+            ? Center(
+              child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    verticalDirection: VerticalDirection.down,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        '비밀번호가 성공적으로 재설정되었습니다! 🎉',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            LoginPage.routeName,
+                          );
+                        },
+                        child: Text('로그인 하러 가기'),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, LoginPage.routeName);
-                    },
-                    child: Text('로그인 하러 가기'),
-                  ),
-                ],
-              )
+            )
+            
             : Column(
               mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,9 +91,15 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        labelText: '이메일 주소',
-                        border: OutlineInputBorder(),
+                      labelText: '이메일 주소',
+                      border: OutlineInputBorder(),
+                      errorText: isValidEmail(emailController.text) || emailController.text.isEmpty
+                        ? null
+                        : '유효한 이메일 주소를 입력해주세요',
                       ),
+                      onChanged: (value) {
+                      setState(() {});
+                      },
                     ),
                     SizedBox(height: 10),
                     ElevatedButton(
@@ -86,6 +107,11 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                       child: Text('인증번호 전송'),
                     ),
                   ] else if (!isCodeValidated) ...[
+                    Text(
+                        '발송된 메일에 적힌 인증 번호를 입력해주세요 😄',
+                        style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 10),
                     TextField(
                       controller: validationCodeController,
                       decoration: InputDecoration(

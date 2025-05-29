@@ -14,6 +14,42 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  final _emailController = TextEditingController();
+  final _emailError = ValueNotifier<String?>(null);
+
+
+  final _passwordController = TextEditingController();
+  final _passwordError = ValueNotifier<String?>(null);
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _emailError.dispose();
+    _passwordController.dispose();
+    _passwordError.dispose();
+    super.dispose();
+  }
+
+  void validateEmail(String email) {
+    const emailRegex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+    if (RegExp(emailRegex).hasMatch(email)) {
+      _emailError.value = null;
+    } else {
+      _emailError.value = '유효한 이메일 주소를 입력해주세요.';
+    }
+  }
+
+  void validatePassword(String password) {
+    const passwordRegex = r'^(?=.*[0-9])(?=.*[@!*_-]).{8,}$';
+    if (RegExp(passwordRegex).hasMatch(password)) {
+      _passwordError.value = null;
+    } else {
+      _passwordError.value =
+          '숫자 1개, 특수문자(@, !, *, -, _) 1개 이상 포함된 8자 이상이어야 합니다.';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -34,22 +70,46 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
               ),
               const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '이메일',
-                  hintText: '이메일 주소를 입력해주세요 (예: honggildong@naver.com)',
+                ValueListenableBuilder<String?>(
+                valueListenable: _emailError,
+                builder: (context, error, child) {
+                  return TextField(
+                  controller: _emailController,
+                  onChanged: validateEmail,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: '이메일',
+                    hintText: '이메일 주소를 입력해주세요 (예: honggildong@naver.com)',
+                    hintStyle: const TextStyle(
+                          fontSize: 12, // 원하는 크기로 조절
+                          color: Colors.grey, // 원하는 색상 지정
+                        ),
+                    errorText: error,
+                  ),
+                  );
+                },
                 ),
-              ),
               const SizedBox(height: 5),
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '비밀번호',
-                  hintText: '비밀번호를 입력해주세요',
+                ValueListenableBuilder<String?>(
+                valueListenable: _passwordError,
+                builder: (context, error, child) {
+                  return TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  onChanged: validatePassword,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: '비밀번호',
+                    hintText: '숫자 1개, 특수문자(@, !, *, -, _) 1개 이상 포함된 8자 이상이어야 합니다.',
+                    hintStyle: const TextStyle(
+                          fontSize: 12, // 원하는 크기로 조절
+                          color: Colors.grey, // 원하는 색상 지정
+                        ),
+                    errorText: error,
+                  ),
+                  );
+                },
                 ),
-              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
