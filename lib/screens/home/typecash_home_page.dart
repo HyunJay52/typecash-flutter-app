@@ -138,22 +138,30 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('미션 성공!'),
-            content: const Text('광고를 시청하고 포인트를 받으시겠습니까?'),
+            title: const Text('정답입니다 🎉',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,)
+            ),
+            content: const Text('광고를 시청하시면 미션 성공 포인트가 적립됩니다.\n광고를 시청하시겠어요?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('취소'),
-              ),
+                child: const Text('취소', 
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
+              )),
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, AdPage.routeName);
                 },
-                child: const Text('광고 시청하기'),
-              ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue[200],
+                ),
+                child: Text('광고 시청하기', 
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[200]),
+                ),
+              )
             ],
-          ),
+        ),
     );
   }
 
@@ -313,16 +321,37 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () => {FocusScope.of(context).unfocus()},
-                    child: TextField(
-                    controller: missionInputController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '미션 문장을 따라 작성해주세요 ⌨️',
+                    ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: missionInputController,
+                    builder: (context, value, child) {
+                      final isValid = value.text.trim() == selectedMission['content'];
+                      return Column(
+                      children: [
+                        GestureDetector(
+                        onTap: () => {FocusScope.of(context).unfocus()},
+                        child: TextField(
+                          controller: missionInputController,
+                          decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: '미션 문장을 따라 작성해주세요 ⌨️',
+                          // errorText: isValid || value.text.isEmpty
+                          //   ? null
+                          //   : '문장을 다시 한 번 확인해주세요',
+                          ),
+                        ),
+                        ),
+                        if (!isValid && value.text.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                          '문장이 정확히 일치해야 합니다.',
+                          style: TextStyle(color: Colors.red, fontSize: 14),
+                          ),
+                        ),
+                      ],
+                      );
+                    },
                     ),
-                    ),
-                  ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -395,65 +424,61 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
             ),
             const SizedBox(height: 30),
             // ! 앱 푸시 알람 설정 섹션
-            Expanded(
-              child: Align(
+            Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
                 color: Colors.grey[100],
                 border: Border.all(
-                  color: Colors.grey[500]!,
-                  width: 2,
+                color: Colors.grey[500]!,
+                width: 2,
                 ),
                 borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                  Row(
                     children: [
-                      const Icon(Icons.notifications, size: 20),
-                      const SizedBox(width: 5),
-                      const Text(
+                    const Icon(Icons.notifications, size: 20),
+                    const SizedBox(width: 5),
+                    const Text(
                       '받아쓰기 알림을 받으시겠어요?',
                       style: TextStyle(
                         fontSize: 16, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
-                      ),
-                    ],
                     ),
-                    Transform.scale(
+                    ],
+                  ),
+                  Transform.scale(
                     scale: 0.8, // Adjust the scale to match the text size
                     child: StatefulBuilder(
-                      builder: (context, setState) {
+                    builder: (context, setState) {
                       return Switch(
-                        value: isNotificationEnabled,
-                        onChanged: (value) {
+                      value: isNotificationEnabled,
+                      onChanged: (value) {
                         setState(() {
-                          isNotificationEnabled = value;
+                        isNotificationEnabled = value;
                         });
-                        // Handle switch change logic here
                         debugPrint('Notification enabled: $value');
-                        },
-                      );
                       },
+                      );
+                    },
                     ),
-                    ),
-                  ],
                   ),
-                  const Text(
+                  ],
+                ),
+                const Text(
                   '매 시 정각에 새로운 받아쓰기 문장이 열릴 때 알려드릴게요, 포인트 적립 순간을 놓치지 마세요.',
                   style: TextStyle(fontSize: 13),
-                  ),
-                ],
                 ),
+                ],
               ),
               ),
             ),

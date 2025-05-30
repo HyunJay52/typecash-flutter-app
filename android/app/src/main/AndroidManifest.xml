@@ -3,6 +3,13 @@
         android:label="typecash_flutter_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- google admob setting -->
+        <meta-data
+            android:name="com.google.android.gms.ads.ca-app-pub-4617098911306047~4349069815"
+            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/>
+
+        <!-- flutter setting -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
