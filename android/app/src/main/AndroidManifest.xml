@@ -5,9 +5,10 @@
         android:icon="@mipmap/ic_launcher">
 
         <!-- google admob setting -->
+        <!-- Operating ID -->
         <meta-data
-            android:name="com.google.android.gms.ads.ca-app-pub-4617098911306047~4349069815"
-            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/>
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
 
         <!-- flutter setting -->
         <activity
@@ -33,7 +34,7 @@
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
-             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->ㄴ
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
