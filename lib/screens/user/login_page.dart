@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:typecash_flutter_app/screens/ad/ad_page.dart';
 import 'package:typecash_flutter_app/screens/user/join_user_page.dart';
 
 import '../home/typecash_home_page.dart';
@@ -50,6 +51,12 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<bool> _checkLoginStatus() async {
+    // 여기에 로그인 상태를 확인하는 로직을 추가합니다.
+    // 예시로, 로그인 상태가 아니라고 가정합니다.
+    return false; // 로그인 상태가 아니라고 가정
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -57,12 +64,29 @@ class _LoginPageState extends State<LoginPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: Scaffold(
-        appBar: AppBar(title: const Text('로그인')),
-        body: Container(
+        child: FutureBuilder<bool>(
+          future: _checkLoginStatus(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            if (snapshot.hasData && snapshot.data == true) {
+              // 이미 로그인 상태면 메인화면으로 이동
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, TypecashHomePage.routeName);
+              });
+              return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            // 로그인 필요: 기존 로그인 화면 노출
+            return Scaffold(
+              appBar: AppBar(title: const Text('로그인')),
+              body: Container(
           margin: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
-            spacing: 10,
             children: [
               const Text('TypeCash', style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
               const Text(
@@ -70,73 +94,78 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
               ),
               const SizedBox(height: 20),
-                ValueListenableBuilder<String?>(
+              ValueListenableBuilder<String?>(
                 valueListenable: _emailError,
                 builder: (context, error, child) {
-                  return TextField(
-                  controller: _emailController,
-                  onChanged: validateEmail,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '이메일',
-                    hintText: '이메일 주소를 입력해주세요 (예: honggildong@naver.com)',
-                    hintStyle: const TextStyle(
-                          fontSize: 12, // 원하는 크기로 조절
-                          color: Colors.grey, // 원하는 색상 지정
-                        ),
-                    errorText: error,
-                  ),
-                  );
-                },
+            return TextField(
+              controller: _emailController,
+              onChanged: validateEmail,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '이메일',
+                hintText: '이메일 주소를 입력해주세요 (예: honggildong@naver.com)',
+                hintStyle: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
                 ),
+                errorText: error,
+              ),
+            );
+                },
+              ),
               const SizedBox(height: 5),
-                ValueListenableBuilder<String?>(
+              ValueListenableBuilder<String?>(
                 valueListenable: _passwordError,
                 builder: (context, error, child) {
-                  return TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  onChanged: validatePassword,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '비밀번호',
-                    hintText: '숫자 1개, 특수문자(@, !, *, -, _) 1개 이상 포함된 8자 이상이어야 합니다.',
-                    hintStyle: const TextStyle(
-                          fontSize: 12, // 원하는 크기로 조절
-                          color: Colors.grey, // 원하는 색상 지정
-                        ),
-                    errorText: error,
-                  ),
-                  );
-                },
+            return TextField(
+              controller: _passwordController,
+              obscureText: true,
+              onChanged: validatePassword,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: '비밀번호',
+                hintText: '숫자 1개, 특수문자(@, !, *, -, _) 1개 이상 포함된 8자 이상이어야 합니다.',
+                hintStyle: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
                 ),
+                errorText: error,
+              ),
+            );
+                },
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Handle login action
-                  Navigator.pushNamed(context, TypecashHomePage.routeName);
+            // Handle login action
+            Navigator.pushNamed(context, TypecashHomePage.routeName);
                 },
                 child: const Text('로그인'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Handle login action
-                  // Navigator.pushNamed(context, '/password-reset');
-                  Navigator.pushNamed(context, PasswordResetPage.routeName);
+            Navigator.pushNamed(context, PasswordResetPage.routeName);
                 },
                 child: const Text('비밀번호 찾기'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Handle login action
-                  Navigator.pushNamed(context, JoinUserPage.routeName);
+            Navigator.pushNamed(context, JoinUserPage.routeName);
                 },
                 child: const Text('회원가입'),
               ),
+              ElevatedButton(
+                onPressed: () {
+            Navigator.pushNamed(context, AdPage.routeName);
+                },
+                child: const Text('광고 페이지 (개발 중)'),
+              ),
             ],
           ),
+              ),
+            );
+          },
         ),
-      ),
     )
     );
   }
