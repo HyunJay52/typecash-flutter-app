@@ -92,6 +92,7 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
       selectedMission = unusedMissions[randomIndex];
     });
   }
+
   Future<void> _markMissionAsUsed() async {
     if (selectedMission.isEmpty || selectedMission['id'] == 'error') {
       return;
@@ -118,7 +119,7 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
   }
 
   void _handleMissionSubmit() {
-    if (missionInputController.text.trim() == selectedMission['content']) {
+    if (missionInputController.text.trim() ==  'qwer') { // selectedMission['content']) {
       // 미션 성공 처리
       _showAdDialog();
       _markMissionAsUsed();
@@ -138,22 +139,112 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('미션 성공!'),
-            content: const Text('광고를 시청하고 포인트를 받으시겠습니까?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('취소'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, AdPage.routeName);
-                },
-                child: const Text('광고 시청하기'),
-              ),
-            ],
-          ),
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: Column(
+              children: [
+                Image.asset(
+                  'assets/images/congrat.png',
+                  height: 65,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  '정답입니다!',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2D3745),
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 15),
+                const Text(
+                  '광고를 시청하시면 미션 성공 포인트가 적립됩니다.\n광고를 시청하시겠어요?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: Colors.black),
+                ),
+                const SizedBox(height: 25),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF3CD),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFFFEEBA)),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Color(0xFFCC8925),
+                        size: 18,
+                      ),
+                      SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          '광고를 끝까지 시청하지 않으면 포인트가 지급되지 않습니다.',
+                          style: TextStyle(
+                            fontSize: 9,
+                            color: Color(0xFFCC8925),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 35,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, AdPage.routeName);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF3182F7),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      '광고 시청하기',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[200],
+                      ),
+                    ),
+                  ),
+                ),
+                // const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    '닫기',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF3182F7),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+            titlePadding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+          )
     );
   }
 
@@ -181,183 +272,347 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
   Widget build(BuildContext context) {
     bool isNotificationEnabled = false;
     final point = NumberFormatUtil.formatNumber(9999000);
-    final String missionContent =
-        selectedMission.isNotEmpty
-            ? selectedMission['content'] ?? '미션 로딩 중...'
-            : '미션 로딩 중...';
-    
+    final String missionContent = 'qwer';
+    // selectedMission.isNotEmpty
+    //     ? selectedMission['content'] ?? '미션 로딩 중...'
+    //     : '미션 로딩 중...';
+
     return Scaffold(
-      appBar: AppBar(title: Center(child: const Text('Typecash 🏠'))),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ! 날짜, 포인트, 포인트 사용하기 버튼 섹션
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.calendar_today, size: 20),
-                      const SizedBox(width: 5),
-                      Text(
-                        '${DateTime.now().year}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().day.toString().padLeft(2, '0')}',
-                        style: const TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+      appBar: AppBar(
+        title: Center(
+          child: Image.asset(
+            'assets/images/logo_v1.png',
+            height: 100, // 로고 크기 줄이기
+            fit: BoxFit.contain,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      backgroundColor: Colors.grey[200],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min, // 추가: 필요한 공간만 사용
+              children: [
+                // ! 날짜, 포인트, 포인트 사용하기 버튼 섹션
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.monetization_on, size: 20),
+                          Image.asset(
+                            'assets/images/calendar.png',
+                            width: 25,
+                            height: 25,
+                          ),
                           const SizedBox(width: 5),
-                          Text('내 포인트:', style: TextStyle(fontSize: 16)),
                           Text(
-                            ' $point',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            '${DateTime.now().year}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().day.toString().padLeft(2, '0')}',
+                            style: const TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/reward.png',
+                                width: 25,
+                                height: 25,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                '내가 모은 포인트:',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                ' $point',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          TextButton(
+                            onPressed:
+                                () => {
+                                  Navigator.pushNamed(
+                                    context,
+                                    RewardStorePage.routeName,
+                                  ),
+                                },
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(10, 3, 10, 3),
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 249, 231, 240),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '신청하기',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xFFC97DA1),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
-
-                      TextButton(
-                        onPressed:
-                            () => {
-                              Navigator.pushNamed(
-                                context,
-                                RewardStorePage.routeName,
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/images/speaker.png',
+                            width: 25,
+                            height: 25,
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            '오늘 총 ',
+                            style: TextStyle(fontSize: 13),
+                            // textAlign: TextAlign.center,
+                          ),
+                          const Text(
+                            '13',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF3182F7),
+                            ),
+                          ),
+                          const Text('문제 중 ', style: TextStyle(fontSize: 13)),
+                          const Text(
+                            '6',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF3182F7),
+                            ),
+                          ),
+                          const Text(
+                            '번째 문장입니다',
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/participation.png',
+                                width: 25,
+                                height: 25,
                               ),
-                            },
-                        child: Row(
-                          children: [
-                            const Icon(Icons.card_giftcard, size: 20),
-                            const SizedBox(width: 5),
-                            Text('신청', style: TextStyle(fontSize: 16)),
-                          ],
-                        ),
+                              Text(
+                                '오늘 참여 현황',
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              ...List.generate(13, (index) {
+                                // 서버에서 받아올 수행 여부를 임시로 설정
+                                bool isCompleted =
+                                    index < 6; // 6개 수행 완료, 나머지 미완료
+                                return Image.asset(
+                                  isCompleted
+                                      ? 'assets/images/o.png'
+                                      : 'assets/images/x.png',
+                                  width: 18,
+                                  height: 18,
+                                );
+                              }),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            // ! 타이핑 미션 섹션
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                Row(
-                  children: [
-                  const Icon(Icons.campaign, size: 20),
-                  const SizedBox(width: 5),
-                  const Text(
-                    '13개 문제 중 ',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  const Text(
-                    '6번째',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  const Text(
-                    ' 문장입니다',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  ],
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(13, (index) {
-                  // 서버에서 받아올 수행 여부를 임시로 설정
-                  bool isCompleted = index < 6; // 6개 수행 완료, 나머지 미완료
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Icon(
-                    isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-                    color: isCompleted ? Colors.green : Colors.grey,
-                    size: 20,
-                    ),
-                  );
-                  }),
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                // ! 타이핑 미션 섹션 - Flexible 제거
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                    missionContent,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                    ),
                   ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () => {FocusScope.of(context).unfocus()},
-                    child: TextField(
-                    controller: missionInputController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '미션 문장을 따라 작성해주세요 ⌨️',
-                    ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      backgroundColor: Colors.blue[200],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min, // 추가: 필요한 공간만 사용
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            alignment: Alignment.centerLeft,
+                            child: Image.asset(
+                              'assets/images/question.png',
+                              width: 50,
+                              height: 50,
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.all(10),
+                            child: Text(
+                              'qwer', // missionContent,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: missionInputController,
+                            builder: (context, value, child) {
+                              final isValid =
+                                  value.text.trim() ==
+                                  selectedMission['content'];
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap:
+                                        () => {
+                                          FocusScope.of(context).unfocus(),
+                                        },
+                                    child: TextField(
+                                      controller: missionInputController,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 14),
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 14,
+                                            ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          borderSide: BorderSide(
+                                            color:
+                                                isValid || value.text.isEmpty
+                                                    ? Colors.grey
+                                                    : Colors.red,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        // 라벨 대신 힌트 사용, 포커스 시 사라지게 함
+                                        hintText: '위 문장을 똑같이 적어 주세요',
+                                        hintStyle: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (!isValid && value.text.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        '오답 입니다. 다시 시도해볼까요?',
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            188,
+                                            55,
+                                            45,
+                                          ),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(130, 40),
+                              backgroundColor: const Color(0xFF3182F7),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: _handleMissionSubmit,
+                            child: Text(
+                              '입력 완료',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[200],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
                       ),
-                    ),
-                    onPressed: _handleMissionSubmit,
-                    child: Text('입력 완료', 
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.grey[200]),
-                    )
+                    ],
                   ),
-                  ],
                 ),
-                const SizedBox(height: 30),
+                // ! 다음 미션까지 남은 시간 섹션
                 Center(
                   child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.timer, size: 15),
-                        const SizedBox(width: 5),
-                        const Text(
-                          '다음 미션까지 남은 시간',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    StreamBuilder<Duration>(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/sand_timer.png',
+                            width: 25,
+                            height: 25,
+                          ),
+                          const SizedBox(width: 5),
+                          // ! 미션 수행 전 "이번 미션 남은 시간", 미션 수행 후 "다음 미션 남은 시간"
+                          const Text(
+                            '다음 미션까지 남은 시간',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      StreamBuilder<Duration>(
                         stream: _countdownStream(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
@@ -383,82 +638,89 @@ class _TypecashHomePageState extends State<TypecashHomePage> {
                           } else {
                             return const Text(
                               '00:00:00',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             );
                           }
                         },
                       ),
-                  ],
+                      const SizedBox(height: 10),
+                    ],
                   ),
                 ),
-                ],
-            ),
-            const SizedBox(height: 30),
-            // ! 앱 푸시 알람 설정 섹션
-            Expanded(
-              child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                color: Colors.grey[100],
-                border: Border.all(
-                  color: Colors.grey[500]!,
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
-                  Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
+                // ! 앱 푸시 알람 설정 섹션
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.notifications, size: 20),
-                      const SizedBox(width: 5),
-                      const Text(
-                      '받아쓰기 알림을 받으시겠어요?',
-                      style: TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/notification.png',
+                                width: 25,
+                                height: 25,
+                              ),
+                              const SizedBox(width: 5),
+                              const Text(
+                                '받아쓰기 알림을 받으시겠어요?',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                          Transform.scale(
+                            scale:
+                                0.7, // Adjust the scale to match the text size
+                            child: StatefulBuilder(
+                              builder: (context, setState) {
+                                return Switch(
+                                  value: isNotificationEnabled,
+                                  activeColor: const Color(0xFF3182F7),
+                                  inactiveTrackColor: Colors.grey[300],
+                                  inactiveThumbColor: Colors.grey[600],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isNotificationEnabled = value;
+                                    });
+                                    debugPrint('Notification enabled: $value');
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          '매 시 정각에 새로운 받아쓰기 문장이 열릴 때 알려드릴게요,\n포인트 적립 순간을 놓치지 마세요.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color.fromARGB(255, 134, 134, 134),
+                          ),
+                        ),
                       ),
                     ],
-                    ),
-                    Transform.scale(
-                    scale: 0.8, // Adjust the scale to match the text size
-                    child: StatefulBuilder(
-                      builder: (context, setState) {
-                      return Switch(
-                        value: isNotificationEnabled,
-                        onChanged: (value) {
-                        setState(() {
-                          isNotificationEnabled = value;
-                        });
-                        // Handle switch change logic here
-                        debugPrint('Notification enabled: $value');
-                        },
-                      );
-                      },
-                    ),
-                    ),
-                  ],
                   ),
-                  const Text(
-                  '매 시 정각에 새로운 받아쓰기 문장이 열릴 때 알려드릴게요, 포인트 적립 순간을 놓치지 마세요.',
-                  style: TextStyle(fontSize: 13),
-                  ),
-                ],
                 ),
-              ),
-              ),
+              ],
             ),
-            const SizedBox(height: 20),
-          ],
+          ),
         ),
       ),
     );
