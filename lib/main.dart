@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:typecash_flutter_app/config/environment.dart';
 import 'package:typecash_flutter_app/providers/ad_provider.dart';
 import 'package:typecash_flutter_app/screens/ad/ad_page.dart';
 import 'package:typecash_flutter_app/screens/home/typecash_home_page.dart';
@@ -13,6 +14,14 @@ import 'package:typecash_flutter_app/screens/user/password_reset_page.dart';
 import 'package:typecash_flutter_app/splash_page.dart';
 
 void main() {
+  final String flavor = const String.fromEnvironment('FLAVOR', defaultValue:'local');
+
+  final EnvironmentConfig config = EnvironmentConfig.fromFlavor(flavor);
+  Environment().initialize(
+    environment: config.environmentType,
+    server: config.serverType,
+  );
+
   // * google admob init
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
@@ -41,7 +50,7 @@ class TypeCashApp extends StatelessWidget {
       ],
       theme: ThemeData(
         fontFamily: 'NanumBarunGothic',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
       supportedLocales: const [
         Locale('ko', 'KR'), // Korean
