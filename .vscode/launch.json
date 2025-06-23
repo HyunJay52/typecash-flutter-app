@@ -5,7 +5,7 @@
             "name": "typecash local",
             "request": "launch",
             "type": "dart",
-            "program": "main.dart",
+            "program": "lib/main.dart",
             "args": ["--flavor", "local"]
         }
     ]
