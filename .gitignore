@@ -65,4 +65,24 @@ lib/generated_plugin_registrant.dart
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+.vscode/settings.json
+android/app/store_upload_key.jks
+android/.settings/org.eclipse.buildship.core.prefs
+
 # End of https://www.toptal.com/developers/gitignore/api/flutter
