@@ -2,11 +2,54 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "typecash local",
+            "name": "TypeCash - Local",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "args": ["--flavor", "local"]
+            "args": ["--flavor", "local", "--dart-define=FLAVOR=local"]
+        },
+        {
+            "name": "TypeCash - Development",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["--flavor", "dev", "--dart-define=FLAVOR=dev"]
+        },
+        {
+            "name": "TypeCash - Staging",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["--flavor", "staging", "--dart-define=FLAVOR=staging"]
+        },
+        {
+            "name": "TypeCash - Production",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["--flavor", "prod", "--dart-define=FLAVOR=prod"]
+        },
+        {
+            "name": "TypeCash - Profile Mode (Dev)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "program": "lib/main.dart",
+            "args": ["--flavor", "dev", "--dart-define=FLAVOR=dev"]
+        },
+        {
+            "name": "TypeCash - Release Mode (Prod)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "lib/main.dart",
+            "args": ["--flavor", "prod", "--dart-define=FLAVOR=prod"]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "All Devices (Dev)",
+            "configurations": ["TypeCash - Development"]
         }
     ]
 }

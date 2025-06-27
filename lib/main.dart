@@ -4,6 +4,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:typecash_flutter_app/config/environment.dart';
 import 'package:typecash_flutter_app/providers/ad_provider.dart';
+import 'package:typecash_flutter_app/providers/join_user_provider.dart';
+import 'package:typecash_flutter_app/providers/user_provider.dart';
 import 'package:typecash_flutter_app/screens/ad/ad_page.dart';
 import 'package:typecash_flutter_app/screens/home/typecash_home_page.dart';
 import 'package:typecash_flutter_app/screens/reward/reward_store_page.dart';
@@ -28,7 +30,10 @@ void main() {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => AdProvider()),
+      providers: [
+        ChangeNotifierProvider(create: (context) => AdProvider(),),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => JoinUserProvider()),
       ],
       child: const TypeCashApp(),
     ),
@@ -50,7 +55,8 @@ class TypeCashApp extends StatelessWidget {
       ],
       theme: ThemeData(
         fontFamily: 'NanumBarunGothic',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF3182F7), primary: Color(0xFF3182F7), secondary: Color(0xFF3182F7)
+        ),
       ),
       supportedLocales: const [
         Locale('ko', 'KR'), // Korean
