@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:typecash_flutter_app/providers/ad_provider.dart';
+import 'package:typecash_flutter_app/providers/user_provider.dart';
+import 'package:typecash_flutter_app/screens/home/typecash_home_page.dart';
 
 class AdPage extends StatefulWidget {
   static const routeName = '/ad';
@@ -15,7 +17,7 @@ class AdPage extends StatefulWidget {
 class _AdPageState extends State<AdPage> {
   bool _isRewarded = false;
   bool _canClose = false;
-  int _remainingTime = 10;
+  int _remainingTime = 5;
   Timer? _timer;
 
   @override
@@ -23,7 +25,7 @@ class _AdPageState extends State<AdPage> {
     super.initState();
 
     // 로그 메시지 추가
-    debugPrint('AdPage initialized');
+    debugPrint('AdPage initialized...');
 
     // 첫 렌더링 후 실행되는 비동기 초기화
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -31,56 +33,39 @@ class _AdPageState extends State<AdPage> {
       final adProvider = Provider.of<AdProvider>(context, listen: false);
 
       // 광고 로드 전 상태 리스너 추가
-      adProvider.addListener(_checkAdStatus);
+      // adProvider.addListener(_checkAdStatus);
 
       // await adProvider.loadInterstitialAd();
       await adProvider.loadRewardedInterstitialAd();
 
-      // if (adProvider.isAdLoaded) {
-      //   debugPrint('Ad loaded successfully, showing ad');
-      //   await adProvider.showRewardedInterstitialAd();
-      //   setState(() => _isRewarded = true);
-      //   _startTimer();
-
-      //   await adProvider.callServerApiTest();
-      // } else {
-      //   debugPrint('Ad failed to load');
-      //   // 광고가 로드되지 않은 경우 사용자에게 알림
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('광고를 불러오지 못했습니다.'),
-      //       duration: Duration(seconds: 2),
-      //     ),
-      //   );
-      // }
     });
   }
 
-  void _checkAdStatus() {
-    final adProvider = Provider.of<AdProvider>(context, listen: false);
+  // void _checkAdStatus() {
+  //   final adProvider = Provider.of<AdProvider>(context, listen: false);
 
-    if (adProvider.isAdLoaded && !_isRewarded) {
-      debugPrint('Ad is loaded, showing ad');
-      adProvider.showRewardedInterstitialAd();
-      _startTimer();
-      // 광고 상태에 따른 UI 업데이트
-      setState(() {
-        _isRewarded = true;  // adProvider.wasAdWatchedLongEnough;
-      });
-    } else if (!adProvider.isAdLoaded && !_isRewarded) {
-      debugPrint('Ad is not loaded yet, waiting...');
-    }
+  //   if (adProvider.isAdLoaded && !_isRewarded) {
+  //     debugPrint('Ad is loaded, showing ad');
+  //     adProvider.showRewardedInterstitialAd();
+  //     _startTimer();
+  //     // 광고 상태에 따른 UI 업데이트
+  //     setState(() {
+  //       _isRewarded = true;  // adProvider.wasAdWatchedLongEnough;
+  //     });
+  //   } else if (!adProvider.isAdLoaded && !_isRewarded) {
+  //     debugPrint('Ad is not loaded yet, waiting...');
+  //   }
 
-    // 광고 상태에 따른 UI 업데이트
-    // setState(() {
-    //   _isRewarded = adProvider.wasAdWatchedLongEnough;
-    // });
+  //   // 광고 상태에 따른 UI 업데이트
+  //   // setState(() {
+  //   //   _isRewarded = adProvider.wasAdWatchedLongEnough;
+  //   // });
 
-    if (!adProvider.isAdLoaded && _isRewarded) {
-      // 광고가 닫히고 보상을 받은 경우
-      debugPrint('Ad closed and reward earned');
-    }
-  }
+  //   if (!adProvider.isAdLoaded && _isRewarded) {
+  //     // 광고가 닫히고 보상을 받은 경우
+  //     debugPrint('Ad closed and reward earned');
+  //   }
+  // }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -105,6 +90,7 @@ class _AdPageState extends State<AdPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('광고'),
@@ -112,7 +98,24 @@ class _AdPageState extends State<AdPage> {
         actions: [
           // 타이머 표시 및 닫기 버튼
           TextButton(
-            onPressed: _canClose ? () => Navigator.of(context).pop() : null,
+            onPressed:
+                _canClose
+                    ? () {
+                      debugPrint(
+                        '포인트 업데이트: ${userProvider.rewardBalance}',
+                      ); // 메서드 호출 전
+                      userProvider.setUserInfo(
+                        rewardBalance: userProvider.rewardBalance + 10,
+                      );
+                      debugPrint(
+                        '포인트 업데이트 완료: ${userProvider.rewardBalance}',
+                      ); // 메서드 호출 후
+                      Navigator.pushReplacementNamed(
+                        context,
+                        TypecashHomePage.routeName,
+                      );
+                    }
+                    : null,
             child: Text(
               _canClose ? '닫기' : '$_remainingTime초',
               style: TextStyle(

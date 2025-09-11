@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:typecash_flutter_app/providers/join_user_provider.dart';
-import 'package:typecash_flutter_app/widgets/app_logo_center.dart';
+import 'package:typecash_flutter_app/strings/privacy_and_usage_terms.dart';
+import 'package:typecash_flutter_app/widgets/app_logo_center_widget.dart';
 
 class JoinUserPage extends StatefulWidget {
   static const routeName = '/join-user';
@@ -86,7 +87,7 @@ class _JoinUserPageState extends State<JoinUserPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 15),
-                      AppLogoCenter(),
+                      AppLogoCenterWidget(),
                       const SizedBox(height: 28),
                       // 이메일 필드
                       const Text(
@@ -217,9 +218,8 @@ class _JoinUserPageState extends State<JoinUserPage> {
                           TextButton(
                             onPressed: () => _showTermsModal(
                                   context,
-                                  '이용약관',
-                                  '이용약관 내용이 여기에 표시됩니다. '
-                                  '이용약관의 내용이 길 경우 스크롤하여 확인할 수 있습니다.',
+                                  PrivacyAndUsageTerms.usageTermTitle,
+                                  PrivacyAndUsageTerms.usageTermContent,
                                 ),
                             child: const Text('[내용보기]'),
                           ),
@@ -239,8 +239,8 @@ class _JoinUserPageState extends State<JoinUserPage> {
                           TextButton(
                             onPressed: () => _showTermsModal(
                                   context,
-                                  '개인정보 수집 및 이용',
-                                  '개인정보 수집 및 이용 동의 내용이 여기에 표시됩니다.',
+                                  PrivacyAndUsageTerms.privacyTermTitle,
+                                  PrivacyAndUsageTerms.privacyTermContent,
                                 ),
                             child: const Text('[내용보기]'),
                           ),
