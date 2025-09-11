@@ -1,17 +1,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Network access permission -->
+        <uses-permission android:name="android.permission.INTERNET"/>
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        <!-- Access to external storage permission -->
+        <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> -->
+
     <application
-        android:label="typecash_flutter_app"
+        android:label="TypeCash"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
         <!-- google admob setting -->
-        <!-- Operating ID -->
+        <!-- 테스트 앱 ID 사용 (개발 중) -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id_for_full_interstitial"/>
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
+        <!-- 실제 앱 ID 사용 (배포 시) -->
+        <!--
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/admob_app_id_for_rewarded_interstitial"/>
+            android:value="@string/admob_app_id_for_rewarded_interstitial"/> -->
 
         <!-- flutter setting -->
         <activity

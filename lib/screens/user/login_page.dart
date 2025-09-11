@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:typecash_flutter_app/screens/ad/ad_page.dart';
+import 'package:provider/provider.dart';
+import 'package:typecash_flutter_app/providers/auth_provider.dart';
+import 'package:typecash_flutter_app/providers/mission_provider.dart';
 import 'package:typecash_flutter_app/screens/user/join_user_page.dart';
+import 'package:typecash_flutter_app/widgets/app_logo_center_widget.dart';
 
 import '../home/typecash_home_page.dart';
 import 'password_reset_page.dart';
@@ -20,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _passwordController = TextEditingController();
   final _passwordError = ValueNotifier<String?>(null);
+  bool _keepLoggedIn = true;
 
   @override
   void dispose() {
@@ -103,31 +107,21 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 70),
-                          Image.asset(
-                            'assets/images/logo_v2.png',
-                            height: 60,
-                            fit: BoxFit.contain,
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            '한 줄로 쌓는 작은 보상',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF2D3745),
-                            ),
+                          const SizedBox(height: 100),
+                          AppLogoCenterWidget(
+                            imageHeight: 80, // 로고 크기 조정
+                            fontSize: 18, // 폰트 크기 조정
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 70),
+                      const SizedBox(height: 50),
 
                       // 이메일 입력
                       const Text(
                         '이메일',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF2D3745),
                         ),
@@ -150,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               hintText: 'honggildong@naver.com',
                               hintStyle: const TextStyle(
-                                fontSize: 13,
+                                fontSize: 14,
                                 color: Colors.grey,
                               ),
                               errorText: error,
@@ -165,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                       const Text(
                         '비밀번호',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF2D3745),
                         ),
@@ -186,10 +180,39 @@ class _LoginPageState extends State<LoginPage> {
                                 vertical: 12, // 약간 줄임
                                 horizontal: 12,
                               ),
-                              errorText: error,
+                              // errorText: error,
                             ),
                           );
                         },
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Transform.scale(
+                              scale: 1.2,
+                              child: Checkbox(
+                              value: _keepLoggedIn,
+                              onChanged: (value) {
+                                setState(() {
+                                _keepLoggedIn = value ?? false;
+                                });
+                              },
+                              activeColor: const Color(0xFF3182F7),
+                              checkColor: Colors.white,
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, // 터치 영역 최소화
+                              visualDensity: VisualDensity.compact, // 시각적 간격 최소화
+                              ),
+                            ),
+                            const SizedBox(width: 4), // 아주 작은 간격
+                            const Text(
+                              '로그인 상태 유지',
+                              style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF2D3745),
+                              ),
+                            ),
+                          ],
                       ),
 
                       const SizedBox(height: 24),
@@ -204,16 +227,57 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushNamed(
+                        onPressed: () async {
+                          if (_emailController.text.isEmpty ||
+                              _passwordController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('이메일과 비밀번호를 입력해주세요.'),
+                                backgroundColor: Colors.red[400],
+                              ),
+                            );
+                            return;
+                          }
+
+                          // * 로그인 로직을 여기에 추가합니다.
+                          // AuthProvider에 컨텍스트 설정
+                          final authProvider = Provider.of<AuthProvider>(
                             context,
-                            TypecashHomePage.routeName,
+                            listen: false,
                           );
+                          authProvider.setContext(context);
+                          final success = await authProvider.login(
+                            _emailController.text,
+                            _passwordController.text,
+                            _keepLoggedIn,
+                          );
+
+                          if(success) {
+                            // todo : getDailySummary() 호출 후, 데이터 바인딩하기
+                            final missionProvider = Provider.of<MissionProvider>(
+                              context,
+                              listen: false,
+                            );
+                            await missionProvider.fetchDailyMissionSummary();
+                            Navigator.pushReplacementNamed(
+                              context,
+                              TypecashHomePage.routeName,
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  authProvider.errorMessage ?? '로그인에 실패했습니다.',
+                                ),
+                                backgroundColor: Colors.red[400],
+                              ),
+                            );
+                          }
                         },
                         child: const Text(
                           '로그인',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -236,7 +300,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: const Text(
                               '[ 비밀번호를 잊으셨나요? ]',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 17,
                                 color: Color(0xFF3182F7),
                               ),
                             ),
@@ -251,22 +315,13 @@ class _LoginPageState extends State<LoginPage> {
                             child: const Text(
                               '[ 처음이신가요? 회원가입 ]',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 17,
                                 color: Color(0xFF3182F7),
                               ),
                             ),
                           ),
                         ],
                       ),
-
-                      // 개발용 버튼은 하단에 배치
-                      // const SizedBox(height: 16),
-                      // OutlinedButton(
-                      //   onPressed: () {
-                      //     Navigator.pushNamed(context, AdPage.routeName);
-                      //   },
-                      //   child: const Text('광고 페이지 (개발 중)'),
-                      // ),
                     ],
                   ),
                 ),

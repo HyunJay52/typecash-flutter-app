@@ -1,7 +1,7 @@
 class StringFormatUtil {
   static bool isValidEmailFormat(String? value) {
     if (value == null || value.isEmpty) return false;
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
     return emailRegex.hasMatch(value);
   }
 
