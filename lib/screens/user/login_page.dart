@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                           return TextField(
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
-                            onChanged: validateEmail,
+                            // onChanged: validateEmail,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                                 vertical: 12, // 약간 줄임
                                 horizontal: 12,
                               ),
-                              hintText: 'honggildong@naver.com',
+                              // hintText: 'honggildong@naver.com',
                               hintStyle: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
@@ -171,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                           return TextField(
                             controller: _passwordController,
                             obscureText: true, // 추가: 비밀번호 숨김
-                            onChanged: validatePassword,
+                            // onChanged: validatePassword,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -274,13 +274,28 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           }
                         },
-                        child: const Text(
-                          '로그인',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        child: Consumer<AuthProvider>(
+                          builder: (context, authProvider, _) {
+                            if (authProvider.isLoading) {
+                              return const SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              );
+                            } else {
+                              return const Text(
+                                '로그인',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ),
 
